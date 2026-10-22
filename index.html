@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hyperthyroidism Assessment · Harrison Ch.384</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1c2333;--mute:#5b6478;--line:#e1e5ee;--pri:#b45309;--pri2:#fef3e2;--ok:#0f766e;--okb:#e0f5f2;--warn:#b91c1c;--warnb:#fde8e8;--info:#1d4ed8;--infob:#e6edff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--card:#182032;--ink:#e8ecf5;--mute:#9aa5bd;--line:#2a3550;--pri:#f5a54a;--pri2:#2b2113;--ok:#4fd1c5;--okb:#12302d;--warn:#fca5a5;--warnb:#3a1717;--info:#93b4ff;--infob:#17233f}}
+:root[data-theme="dark"]{--bg:#0f1420;--card:#182032;--ink:#e8ecf5;--mute:#9aa5bd;--line:#2a3550;--pri:#f5a54a;--pri2:#2b2113;--ok:#4fd1c5;--okb:#12302d;--warn:#fca5a5;--warnb:#3a1717;--info:#93b4ff;--infob:#17233f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:16px 16px 8px}
+h1{margin:0;font-size:20px}
+.sub{color:var(--mute);font-size:13px}
+nav{display:flex;gap:6px;padding:8px 16px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;overflow-x:auto}
+nav button{flex:1;white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 12px;border-radius:10px;font:inherit;font-weight:600}
+nav button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+main{padding:8px 16px 40px;max-width:760px;margin:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+.card h2{margin:0 0 8px;font-size:16px}
+.card h3{margin:10px 0 4px;font-size:14px;color:var(--pri)}
+label.ck{display:flex;gap:8px;align-items:flex-start;padding:5px 0}
+label.ck input{margin-top:4px;width:18px;height:18px;flex:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+select{width:100%;padding:9px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.fl{font-size:12px;color:var(--mute);margin-bottom:3px}
+.btn{width:100%;margin-top:10px;padding:12px;border:0;border-radius:11px;background:var(--pri);color:#fff;font:inherit;font-weight:700}
+.btn.sec{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.res{border-left:5px solid var(--info);background:var(--infob);border-radius:10px;padding:10px 12px;margin:8px 0}
+.res.ok{border-color:var(--ok);background:var(--okb)}
+.res.warn{border-color:var(--warn);background:var(--warnb)}
+.res b.t{display:block;margin-bottom:2px}
+ul{margin:4px 0 4px 18px;padding:0}
+details{border:1px solid var(--line);border-radius:12px;background:var(--card);margin:8px 0;padding:0 12px}
+summary{padding:12px 0;font-weight:600;cursor:pointer}
+details>div{padding-bottom:10px}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top}
+.tbl th{color:var(--pri)}
+.scroll{overflow-x:auto}
+.q{margin:10px 0}
+.q button{display:block;width:100%;text-align:left;margin:5px 0;padding:10px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.q button.r{background:var(--okb);border-color:var(--ok)}
+.q button.w{background:var(--warnb);border-color:var(--warn)}
+.foot{font-size:12px;color:var(--mute);text-align:center;padding:10px 16px 30px}
+pre.mermaid{background:var(--card);padding:8px;border-radius:10px;overflow-x:auto}
+</style>
+</head>
+<body>
+<header><h1>🦋 Hyperthyroidism Assessment</h1><div class="sub">Thyrotoxicosis · Harrison’s Ch.384 (Jameson, Mandel, Weetman), pp.2938–2945</div></header>
+<nav id="nav"></nav>
+<main id="main"></main>
+<div class="foot">Educational decision-support from the source chapter. Clinical judgement and local protocols prevail; verify doses before use.</div>
+<script>
+const TABS=["Assess","Pathophysiology","Learn","Treatment"];
+let tab=0;
+const SYM=["Hyperactivity, irritability, dysphoria","Heat intolerance and sweating","Palpitations","Fatigue and weakness","Weight loss with increased appetite","Diarrhea / increased stool frequency","Polyuria","Oligomenorrhea, loss of libido"];
+const SIGN=["Tachycardia (AF in the elderly)","Tremor","Goiter","Warm, moist skin","Proximal muscle weakness","Lid retraction or lag","Gynecomastia"];
+const STORM=["Fever","Delirium / seizures / coma","Vomiting, diarrhea or jaundice","Marked tachycardia / arrhythmia or heart failure","Precipitant: infection, surgery, trauma, DKA, RAI in untreated patient"];
+const CTX=[
+["gd","Diffuse goiter, thrill or bruit"],["oph","Ophthalmopathy (proptosis, diplopia, chemosis)"],["derm","Thyroid dermopathy or acropachy"],["ab","TRAb or TPO antibodies positive"],
+["nod","Multinodular goiter or solitary nodule"],["pain","Painful, tender thyroid"],["esr","High ESR"],["pp","Postpartum (3–6 months)"],
+["amio","Amiodarone use"],["iod","Iodine excess (contrast, supplements)"],["ifn","IFN-α, TKI or checkpoint inhibitor"],["exo","Exogenous thyroid hormone use"],
+["preg","Pregnant / planning pregnancy"],["af","Atrial fibrillation / heart disease"],["smk","Smoker"],["old","Age ≥60 or apathetic picture"]];
+const POS={};
+const sel=(id,l,opts)=>`<div><div class="fl">${l}</div><select id="${id}">${opts.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join("")}</select></div>`;
+const ck=(p,a)=>a.map((x,i)=>`<label class="ck"><input type="checkbox" data-g="${p}" value="${i}"><span>${x}</span></label>`).join("");
+
+function nav(){document.getElementById("nav").innerHTML=TABS.map((t,i)=>`<button class="${i==tab?"on":""}" onclick="go(${i})">${t}</button>`).join("")}
+function go(i){tab=i;nav();render();scrollTo(0,0)}
+
+function assessView(){return `
+<div class="card"><h2>1 · Symptoms &amp; signs</h2><div class="fl">Table 384-2, descending frequency</div>
+<h3>Symptoms</h3>${ck("sym",SYM)}<h3>Signs</h3>${ck("sign",SIGN)}</div>
+<div class="card"><h2>2 · Laboratory &amp; imaging</h2><div class="grid">
+${sel("tsh","TSH",[["","Not available"],["low","Low / suppressed"],["norm","Normal"],["high","Increased"]])}
+${sel("ft4","Unbound T4",[["","Not available"],["high","High"],["norm","Normal"],["low","Low"]])}
+${sel("t3","Unbound / total T3",[["","Not available"],["high","High"],["norm","Normal"]])}
+${sel("up","Radionuclide uptake (99mTc, 123I)",[["","Not done"],["dif","High, diffuse"],["nodu","High, focal / nodular"],["low","Low / absent"]])}
+</div></div>
+<div class="card"><h2>3 · Clinical context</h2>${CTX.map(c=>`<label class="ck"><input type="checkbox" data-g="ctx" value="${c[0]}"><span>${c[1]}</span></label>`).join("")}</div>
+<div class="card"><h2>4 · Thyroid storm screen</h2>${ck("storm",STORM)}</div>
+<button class="btn" onclick="run()">Assess</button><button class="btn sec" onclick="render()">Reset</button>
+<div id="out"></div>`}
+
+function vals(g){return [...document.querySelectorAll(`input[data-g="${g}"]:checked`)].map(e=>e.value)}
+function R(cls,t,items){return `<div class="res ${cls}"><b class="t">${t}</b>${Array.isArray(items)?"<ul>"+items.map(i=>`<li>${i}</li>`).join("")+"</ul>":items}</div>`}
+
+function run(){
+const v=id=>document.getElementById(id).value, c=vals("ctx"), h=x=>c.includes(x);
+const ns=vals("sym").length, ng=vals("sign").length, st=vals("storm").length;
+const tsh=v("tsh"),ft4=v("ft4"),t3=v("t3"),up=v("up");
+let o="";
+o+=R(st>=2?"warn":st==1?"":"ok","Thyroid storm screen",st>=2?["<b>Possible thyrotoxic crisis</b> (mortality up to 30% even with treatment): intensive monitoring, supportive care, treat precipitant.","See Treatment tab → Thyroid storm."]:st==1?["One storm feature present: reassess closely with vitals and mental status."]:["No storm features ticked."]);
+o+=R("",`Clinical picture`,[`${ns}/8 typical symptoms, ${ng}/7 typical signs ticked (tally only, not a validated score).`,h("old")?"Elderly: features may be subtle or masked; apathetic thyrotoxicosis presents with fatigue and weight loss and can mimic depression.":"Normal TSH and unbound T4/T3 exclude thyrotoxicosis; clinical features alone can mimic panic, mania, pheochromocytoma or malignancy."]);
+// pattern
+let pat="",dx=[],next=[],tone="";
+if(!tsh&&!ft4){pat="Enter TSH and unbound T4 to follow the Fig. 384-2 algorithm.";}
+else if(tsh==="low"&&ft4==="high"||(tsh==="low"&&t3==="high"&&ft4!=="low")){
+ pat=ft4==="high"?"Low TSH + high unbound T4 → primary thyrotoxicosis":"Low TSH + normal T4 + high T3 → T3 toxicosis (primary thyrotoxicosis)";
+ tone="warn";
+ const gf=h("gd")||h("oph")||h("derm")||h("ab");
+ if(h("oph")||h("derm")){dx.push("<b>Graves’ disease</b> (ophthalmopathy / dermopathy are specific)");}
+ if(gf&&!dx.length)dx.push("<b>Graves’ disease likely</b> (diffuse goiter and/or TPO/TRAb positivity)");
+ if(up==="dif")dx.push("High diffuse uptake supports <b>Graves’ disease</b>");
+ if(up==="nodu"||(!gf&&h("nod")))dx.push("<b>Toxic multinodular goiter or toxic adenoma</b> (confirm by radionuclide scan)");
+ if(up==="low"||h("pain")||h("esr")||h("pp")||h("exo")||h("iod")||h("amio")||h("ifn")){
+  const l=[];
+  if(h("pain")||h("esr"))l.push("subacute (de Quervain) thyroiditis");
+  if(h("pp"))l.push("silent / postpartum thyroiditis");
+  if(h("amio"))l.push("amiodarone-induced thyrotoxicosis (type 1 vs type 2)");
+  if(h("iod"))l.push("iodine-induced (Jod-Basedow)");
+  if(h("ifn"))l.push("drug-induced painless thyroiditis");
+  if(h("exo"))l.push("thyrotoxicosis factitia");
+  if(up==="low"&&!l.length)l.push("destructive thyroiditis, iodine excess, exogenous hormone, or ectopic thyroid tissue (struma ovarii)");
+  dx.push("Low-uptake <b>thyrotoxicosis without hyperthyroidism</b>: "+l.join("; "));
+ }
+ if(!dx.length)dx.push("Primary thyrotoxicosis; cause undetermined. Look for Graves’ features, then scan.");
+ next=["If unclear clinically: radionuclide (99mTc, 123I or 131I) scan and uptake; TRAb is increasingly used instead of scanning.","Colour-flow Doppler: increased flow in hyperthyroidism, reduced in destructive thyroiditis.","Check LFTs, bilirubin, ferritin, CBC (abnormalities can cause diagnostic confusion).","Measure TPO antibodies/TRAb only if cause unclear; TRAb is needed in pregnancy."];
+ if(h("pain")||h("esr"))next.push("Subacute thyroiditis: ESR high, uptake <5%, thyroid antibodies negative; FNA if doubt.");
+}
+else if(tsh==="low"&&ft4==="norm"&&t3==="norm"){pat="Low TSH + normal T4 + normal T3 → subclinical hyperthyroidism";tone="";dx.push("Subclinical hyperthyroidism");next=["Follow up in 6–12 weeks (Fig. 384-2).","Consider early excess-iodine or non-thyroidal illness, and AF/bone risk in older patients."];}
+else if(tsh==="low"&&ft4==="norm"&&!t3){pat="Low TSH + normal T4 → measure T3";dx.push("T3 toxicosis vs subclinical hyperthyroidism");next=["Measure unbound T3: high = T3 toxicosis; normal = subclinical, follow up in 6–12 weeks."];}
+else if((tsh==="norm"||tsh==="high")&&ft4==="high"){pat="Non-suppressed TSH + high unbound T4 → secondary thyrotoxicosis";tone="warn";dx.push("<b>TSH-secreting pituitary adenoma</b> or <b>thyroid hormone resistance syndrome</b>");next=["Elevated α-subunit of TSH supports adenoma; MRI/CT of pituitary; diffuse goiter is common.","Assay interference should be excluded; refer to endocrinology (transsphenoidal surgery, irradiation, octreotide)."];}
+else if((tsh==="norm")&&ft4==="norm"){pat="Normal TSH and unbound T4 → no further tests";tone="ok";dx.push("Thyrotoxicosis effectively excluded; a normal TSH also excludes Graves’ disease as a cause.");}
+else {pat="Pattern does not fit thyrotoxicosis (e.g., high TSH with low T4 suggests hypothyroidism).";dx.push("Review the hypothyroidism pathway if TSH is high and T4 low.");}
+o+=R(tone,"Biochemical pattern",pat);
+if(dx.length)o+=R(tone==="ok"?"ok":"","Likely diagnosis",dx);
+if(next.length)o+=R("","Suggested work-up",next);
+// treatment pointers
+const t=[];
+const prim=(tsh==="low"&&(ft4==="high"||t3==="high"));
+if(prim){
+ t.push("Symptom control: propranolol 20–40 mg every 6 h (or atenolol) while antithyroid drugs take effect; helpful in thyrotoxic periodic paralysis.");
+ if(h("gd")||h("oph")||h("derm")||h("ab")||up==="dif")t.push("Graves’: thionamide (methimazole/carbimazole or PTU) titration or block-replace, radioiodine, or thyroidectomy.");
+ if(up==="nodu")t.push("Toxic nodular disease: radioiodine or surgery are the definitive options (antithyroid drugs do not induce remission).");
+ if(h("preg"))t.push("<b>Pregnancy</b>: radioiodine contraindicated. PTU until 14–16 weeks, then switch to methimazole; titrate to free T4 at/just above upper reference.");
+ if(h("af"))t.push("AF or heart disease: consider anticoagulation with cardiology; digoxin and warfarin doses often higher while thyrotoxic; AF often converts once euthyroid.");
+ if(h("smk")||h("oph"))t.push("Smoking worsens Graves’ ophthalmopathy; advise cessation. If RAI is used with eye disease, consider prednisone cover.");
+ if(h("pain")||h("esr"))t.push("Subacute thyroiditis: aspirin (e.g., 600 mg q4–6 h) or NSAIDs; glucocorticoids (prednisone 15–40 mg) if severe.");
+ if(h("pp"))t.push("Silent thyroiditis: β-blocker only; no glucocorticoids; recheck function every 2–4 weeks then annually.");
+ if(h("amio"))t.push("Amiodarone-induced: type 1 → thionamides ± perchlorate; type 2 → glucocorticoids (prednisone ~40 mg); stop drug if cardiac status allows.");
+}
+if(t.length)o+=R("ok","Treatment pointers (see Treatment tab)",t);
+document.getElementById("out").innerHTML=o;
+document.getElementById("out").scrollIntoView({behavior:"smooth"});
+}
+
+const PATH=[
+["Graves’ disease (60–80% of thyrotoxicosis)",["Thyroid-stimulating immunoglobulins (TSI) are made by lymphocytes in thyroid, bone marrow and lymph nodes; they bind the TSH receptor and drive hormone synthesis.","TRAb positivity implies TSI; important in pregnancy as TSI crosses the placenta (neonatal thyrotoxicosis).","Genetics: HLA-DR, CTLA-4, CD25, PTPN22, FCRL3, CD226 and TSH-R; concordance 20–30% in monozygotic vs <5% in dizygotic twins.","Triggers: stress, smoking (also major risk for ophthalmopathy), iodine intake, postpartum period (threefold rise), immune reconstitution after HAART or alemtuzumab, checkpoint inhibitors.","TPO/Tg antibodies occur in up to 80% but do not correlate with hormone levels."]],
+["Ophthalmopathy and dermopathy",["T-cell infiltration of extraocular muscles; IFN-γ, TNF and IL-1 activate fibroblasts, increasing glycosaminoglycans that trap water → muscle swelling.","Later: irreversible fibrosis of muscles; retrobulbar fat expansion raises intra-orbital pressure → proptosis, diplopia, optic neuropathy.","TSH-R is an autoantigen expressed in orbital tissue; IGF-1R signalling is also implicated (basis for teprotumumab).","Course: worsens 3–6 months, plateau 12–18 months, then partial improvement; fulminant in up to 5%."]],
+["Toxic multinodular goiter / adenoma",["Autonomous follicular cells; hyperfunction independent of TSH.","Other causes: activating TSH-R or Gsα mutations (McCune-Albright), functioning metastatic carcinoma, struma ovarii."]],
+["Destructive (sub)acute thyroiditis",["Patchy inflammation, follicular disruption and multinucleated giant cells → release of Tg and preformed T4/T3, TSH suppression.","Phases: thyrotoxic (uptake low, ESR high) → hypothyroid (low T4, TSH up to ~weeks 6–12+) → recovery; ~15% develop late permanent hypothyroidism.","Viral trigger (mumps, coxsackie, influenza, adenovirus, SARS-CoV-2 reported); peak age 30–50, women 3× more."]],
+["Amiodarone, iodine and drugs",["Amiodarone is 39% iodine by weight: Type 1 AIT (underlying nodular/Graves’, Jod-Basedow) vs Type 2 AIT (destructive thyroiditis, lysosomal activation).","Type 1: increased vascularity on Doppler; Type 2: decreased vascularity; uptake normal/increased favours type 1.","IFN-α, TKIs and checkpoint inhibitors can cause painless thyroiditis (up to ~5%)."]],
+["Secondary causes",["TSH-secreting adenoma or thyroid hormone resistance: inappropriately normal/high TSH with high T4/T3; elevated α-subunit of TSH.","hCG-mediated (gestational / trophoblastic) thyrotoxicosis: TSH low."]]];
+
+const LEARN=`
+<div class="card"><h2>Causes of thyrotoxicosis (Table 384-1)</h2><div class="scroll"><table class="tbl">
+<tr><th>Group</th><th>Examples</th></tr>
+<tr><td>Primary hyperthyroidism</td><td>Graves’, toxic MNG, toxic adenoma, functioning metastases, activating TSH-R/Gsα mutations, struma ovarii, iodine excess</td></tr>
+<tr><td>Without hyperthyroidism</td><td>Subacute thyroiditis, silent thyroiditis, amiodarone/radiation/infarction, excess hormone ingestion (factitia)</td></tr>
+<tr><td>Secondary</td><td>TSH-secreting adenoma, thyroid hormone resistance, hCG-secreting tumours, gestational thyrotoxicosis</td></tr></table></div></div>
+<div class="card"><h2>NO SPECS (ophthalmopathy)</h2><table class="tbl">
+<tr><td>0</td><td><b>N</b>o signs or symptoms</td></tr><tr><td>1</td><td><b>O</b>nly signs (lid retraction or lag)</td></tr><tr><td>2</td><td><b>S</b>oft-tissue involvement</td></tr><tr><td>3</td><td><b>P</b>roptosis (&gt;22 mm)</td></tr><tr><td>4</td><td><b>E</b>xtraocular muscle involvement (diplopia)</td></tr><tr><td>5</td><td><b>C</b>orneal involvement</td></tr><tr><td>6</td><td><b>S</b>ight loss</td></tr></table>
+<p class="sub">Inadequate for full description; EUGOGO activity scoring is preferred for monitoring. Refer to an ophthalmologist when active/severe.</p></div>
+<div class="card"><h2>Subacute thyroiditis: lab phases</h2><table class="tbl"><tr><th>Phase</th><th>Findings</th></tr>
+<tr><td>Thyrotoxic (0–~6 wk)</td><td>↑ T4/T3, TSH suppressed, ↑ ESR, uptake &lt;5%</td></tr>
+<tr><td>Hypothyroid</td><td>Low unbound T4, TSH moderately raised</td></tr>
+<tr><td>Recovery</td><td>Normalisation over months</td></tr></table></div>
+<div class="card"><h2>Key points</h2><ul>
+<li>Thyrotoxicosis ≠ hyperthyroidism: thyroiditis causes hormone excess without increased synthesis.</li>
+<li>In 2–5% of Graves’ patients only T3 is raised (T3 toxicosis).</li>
+<li>Graves’ is 10× commoner in women; peak 20–50 years.</li>
+<li>Untreated mortality 10–30%; ~15% become hypothyroid 10–15 years after remission.</li>
+<li>Dermopathy (&lt;5%) is almost always with ophthalmopathy; acropachy &lt;1%.</li></ul></div>
+<div class="card"><h2>Quick quiz</h2><div id="quiz"></div></div>`;
+
+const QZ=[
+["Low TSH, normal T4, high T3 is called:",["Subclinical hyperthyroidism","T3 toxicosis","Secondary thyrotoxicosis"],1],
+["Which drug is preferred for thyroid storm because it also blocks T4→T3?",["Methimazole","Propylthiouracil","Carbimazole"],1],
+["Radioiodine is absolutely contraindicated in:",["Smokers","Pregnancy and breast-feeding","Elderly"],1],
+["Most serious antithyroid drug adverse effect to warn patients about:",["Rash","Agranulocytosis","Arthralgia"],1],
+["Subacute thyroiditis typically shows:",["High ESR and low radioiodine uptake","Low ESR and high uptake","Positive TRAb"],0],
+["In the NO SPECS scheme, “P” stands for:",["Pain","Proptosis","Pruritus"],1]];
+
+const TX=[
+["Graves’ disease: options",["<b>Antithyroid drugs</b> (thionamides): propylthiouracil, carbimazole (not in US), methimazole. Inhibit TPO function; reduce antibody levels.","Initial: carbimazole/methimazole 10–20 mg every 8–12 h (once daily possible after euthyroid); PTU 100–200 mg every 6–8 h.","<b>Titration</b>: reduce to maintenance 2.5–10 mg methimazole/carbimazole or 50–100 mg PTU; or <b>block-replace</b> with levothyroxine.","Review TFTs 4–6 weeks after starting; titrate to unbound T4 (TSH stays suppressed for months). Most are euthyroid by 6–8 weeks.","Remission up to 30–60%, maximal at 12–18 months (titration) or 6 months (block-replace). Relapse more likely in young, male, smokers, severe hyperthyroidism, large goiter.","Follow closely in year 1 after stopping, then at least annually.","<b>Radioiodine</b> (131I) or <b>thyroidectomy</b> for relapse; RAI is first-line in many centres in North America."]],
+["Antithyroid drug adverse effects",["Common (1–5%): rash, urticaria, fever, arthralgia; can switch drug or use antihistamine.","Rare: hepatitis (esp. PTU; avoid PTU in children), vasculitis, <b>agranulocytosis (&lt;1%)</b>.","Give written warning: sore throat, fever, mouth ulcers → stop drug and check blood count urgently; never restart after agranulocytosis.","Monitor LFTs if PTU is used."]],
+["Radioiodine",["Progressive destruction of thyroid cells; usual dose 370–555 MBq (10–15 mCi); fixed dose based on severity, goiter size, uptake.","Pretreat ≥1 month with antithyroid drug and β-blocker in elderly or cardiac patients; stop carbimazole/methimazole 2–3 days before, restart 3–7 days after; stop PTU longer.","Hypothyroidism risk: 10–20% in year 1 then ~5%/year; most authorities aim for ablation then lifelong LT4.","Contraindications: pregnancy, breast-feeding. Active moderate–severe eye disease: avoid or give prednisone 0.2–0.5 mg/kg/day, taper over 6–12 weeks.","Radiation precautions: avoid close contact with children and pregnant women 5–7 days; conception safe after ~6 months."]],
+["Surgery (total / near-total thyroidectomy)",["For relapse after ATD, large goiter, young patients, or preference.","Control with ATD then potassium iodide (SSKI 1–2 drops tid for 10 days) pre-op to reduce vascularity.","Complications (rare in experienced hands): bleeding, hypoparathyroidism, recurrent laryngeal nerve injury; recurrence &lt;2%."]],
+["Pregnancy and breast-feeding",["Use antithyroid drugs; titrate to keep serum free/total T4 at or just above the upper reference.","PTU until 14–16 weeks (methimazole/carbimazole embryopathy: aplasia cutis, choanal atresia), then switch to methimazole (15–20 mg PTU ≈ 1 mg methimazole).","Possible to stop in last trimester; TRAb &gt;3× normal or fetal HR &gt;160/min suggests fetal thyrotoxicosis.","Breast-feeding is safe with low-dose methimazole/carbimazole.","Postpartum is a high-risk period for relapse."]],
+["Thyroid storm (thyrotoxic crisis)",["Intensive monitoring, supportive care, treat precipitant.","<b>PTU</b> 500–1000 mg load then 250 mg every 4 h (oral/NG/rectal); methimazole 20 mg every 6 h if PTU unavailable.","One hour later: stable iodide (SSKI 5 drops every 6 h) or equivalent to block release (Wolff-Chaikoff).","Propranolol 60–80 mg PO every 4 h or 2 mg IV every 4 h; caution in heart failure; IV esmolol under monitoring.","Hydrocortisone 300 mg IV then 100 mg every 8 h; antibiotics if infection; cholestyramine; cooling, oxygen, IV fluids."]],
+["Graves’ ophthalmopathy and dermopathy",["Mild/moderate: spontaneous improvement; control thyroid function, stop smoking, artificial tears, paraffin ointment, dark glasses, head elevation, diuretic for periorbital edema, prisms for diplopia; selenium 100 µg bid considered.","Severe (optic neuropathy, corneal damage): emergency with ophthalmology; IV methylprednisolone 500 mg weekly × 6 then 250 mg weekly × 6; orbital decompression if refractory.","Teprotumumab (FDA 2020): 10 mg/kg IV then 20 mg/kg every 3 weeks × 21 weeks.","Orbital radiotherapy: efficacy unclear. Surgery for diplopia/appearance once stable.","Dermopathy: topical high-potency steroid under occlusive dressing."]],
+["Thyroiditis",["<b>Acute (suppurative)</b>: antibiotics guided by FNA culture; drain abscess; evaluate piriform sinus.","<b>Subacute</b>: aspirin/NSAIDs; prednisone 15–40 mg tapering over 6–8 weeks if severe; monitor TFTs every 2–4 weeks; LT4 50–100 µg only if prolonged hypothyroid phase.","<b>Silent/postpartum</b>: β-blocker for symptoms; no steroids; may need LT4, withdraw after 6–9 months; annual follow-up (permanent hypothyroidism in some).","<b>Riedel’s</b>: surgical relief of compression; tamoxifen may help."]],
+["Amiodarone-induced thyrotoxicosis",["Stop amiodarone if possible (long half-life, effect persists); do not rely on discontinuation alone.","Type 1: thionamides in high doses, potassium perchlorate 200 mg every 6 h (agranulocytosis risk).","Type 2: glucocorticoids (prednisone 40 mg daily); lithium may help.","Near-total thyroidectomy rapidly effective if patient can undergo it safely."]],
+["Subclinical and other",["Subclinical hyperthyroidism: recheck in 6–12 weeks.","Thyrotoxicosis factitia/ectopic: stop hormone; treat cause.","TSH-secreting adenoma: transsphenoidal surgery, irradiation, octreotide; ATD or RAI to control thyrotoxicosis."]]];
+
+function pathView(){return `<div class="card"><h2>Pathophysiology</h2><div class="sub">Tap a topic to expand</div></div>`+PATH.map(p=>`<details><summary>${p[0]}</summary><div><ul>${p[1].map(x=>`<li>${x}</li>`).join("")}</ul></div></details>`).join("")+`<div class="card"><h2>Thyrotoxic phase hormone sequence</h2><ol class="hormone-sequence"><li>Follicular injury</li><li>Tg and T4/T3 released</li><li>TSH suppressed, uptake low</li><li>Stores depleted: hypothyroid phase</li><li>Recovery: TSH and function normalise</li></ol></div>`}
+function txView(){return `<div class="card"><h2>Treatment</h2><div class="sub">Based on pp.2939–2945. Doses are as stated in the chapter.</div></div>`+TX.map(p=>`<details><summary>${p[0]}</summary><div><ul>${p[1].map(x=>`<li>${x}</li>`).join("")}</ul></div></details>`).join("")}
+
+function quiz(){
+const q=document.getElementById("quiz");if(!q)return;
+q.innerHTML=QZ.map((x,i)=>`<div class="q"><b>${i+1}. ${x[0]}</b>${x[1].map((o,j)=>`<button onclick="ans(this,${j},${x[2]})">${o}</button>`).join("")}</div>`).join("")}
+function ans(b,j,c){const p=b.parentNode;if(p.dataset.d)return;p.dataset.d=1;b.classList.add(j==c?"r":"w");if(j!=c)p.querySelectorAll("button")[c].classList.add("r")}
+
+function render(){
+const m=document.getElementById("main");
+m.innerHTML=[assessView,pathView,()=>LEARN,txView][tab]();
+if(tab==2)quiz();
+}
+nav();render();
+</script>
+
+
+</body>
+</html>
