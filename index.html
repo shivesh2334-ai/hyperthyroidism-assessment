@@ -46,6 +46,17 @@ details>div{padding-bottom:10px}
 .q button.w{background:var(--warnb);border-color:var(--warn)}
 .foot{font-size:12px;color:var(--mute);text-align:center;padding:10px 16px 30px}
 pre.mermaid{background:var(--card);padding:8px;border-radius:10px;overflow-x:auto}
+
+/* Indian medicine catalogue */
+a{color:var(--info)}
+#med-search{width:100%;margin:6px 0 10px;padding:11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);font:inherit}
+.med-filters{margin:8px 0}.med-filters label{display:block;margin-bottom:5px}
+.med-table{position:relative;max-width:100%;border:1px solid var(--line);border-radius:8px}
+.med-table table{min-width:940px}.med-table td,.med-table th{padding:10px;overflow-wrap:anywhere}
+.med-table th:nth-child(1){width:14%}.med-table th:nth-child(2){width:17%}.med-table th:nth-child(3){width:22%}.med-table th:nth-child(4){width:12%}.med-table th:nth-child(5){width:15%}
+.med-tag{display:inline-block;background:var(--pri2);color:var(--pri);font-size:12px;border-radius:6px;padding:2px 6px;margin-left:3px}
+:focus-visible{outline:3px solid var(--info);outline-offset:3px}
+@media(max-width:480px){.med-filters{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -54,7 +65,7 @@ pre.mermaid{background:var(--card);padding:8px;border-radius:10px;overflow-x:aut
 <main id="main"></main>
 <div class="foot">Educational decision-support from the source chapter. Clinical judgement and local protocols prevail; verify doses before use.</div>
 <script>
-const TABS=["Assess","Pathophysiology","Learn","Treatment"];
+const TABS=["Assess","Pathophysiology","Learn","Treatment","Indian Medicines"];
 let tab=0;
 const SYM=["Hyperactivity, irritability, dysphoria","Heat intolerance and sweating","Palpitations","Fatigue and weakness","Weight loss with increased appetite","Diarrhea / increased stool frequency","Polyuria","Oligomenorrhea, loss of libido"];
 const SIGN=["Tachycardia (AF in the elderly)","Tremor","Goiter","Warm, moist skin","Proximal muscle weakness","Lid retraction or lag","Gynecomastia"];
@@ -68,8 +79,8 @@ const POS={};
 const sel=(id,l,opts)=>`<div><div class="fl">${l}</div><select id="${id}">${opts.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join("")}</select></div>`;
 const ck=(p,a)=>a.map((x,i)=>`<label class="ck"><input type="checkbox" data-g="${p}" value="${i}"><span>${x}</span></label>`).join("");
 
-function nav(){document.getElementById("nav").innerHTML=TABS.map((t,i)=>`<button class="${i==tab?"on":""}" onclick="go(${i})">${t}</button>`).join("")}
-function go(i){tab=i;nav();render();scrollTo(0,0)}
+function nav(){document.getElementById("nav").innerHTML=TABS.map((t,i)=>`<button class="${i==tab?"on":""}" aria-current="${i==tab?"page":"false"}" onclick="go(${i})">${t}</button>`).join("")}
+function go(i){tab=i;nav();render();document.querySelector("nav button.on").scrollIntoView({block:"nearest",inline:"nearest"});scrollTo(0,0)}
 
 function assessView(){return `
 <div class="card"><h2>1 · Symptoms &amp; signs</h2><div class="fl">Table 384-2, descending frequency</div>
@@ -137,7 +148,7 @@ if(prim){
  if(h("gd")||h("oph")||h("derm")||h("ab")||up==="dif")t.push("Graves’: thionamide (methimazole/carbimazole or PTU) titration or block-replace, radioiodine, or thyroidectomy.");
  if(up==="nodu")t.push("Toxic nodular disease: radioiodine or surgery are the definitive options (antithyroid drugs do not induce remission).");
  if(h("preg"))t.push("<b>Pregnancy</b>: radioiodine contraindicated. PTU until 14–16 weeks, then switch to methimazole; titrate to free T4 at/just above upper reference.");
- if(h("af"))t.push("AF or heart disease: consider anticoagulation with cardiology; digoxin and warfarin doses often higher while thyrotoxic; AF often converts once euthyroid.");
+ if(h("af"))t.push("AF or heart disease: consider anticoagulation with cardiology; digoxin response may change with thyroid status; hyperthyroidism increases warfarin sensitivity, so adjust warfarin by INR and monitor closely as thyroid status changes; AF often converts once euthyroid.");
  if(h("smk")||h("oph"))t.push("Smoking worsens Graves’ ophthalmopathy; advise cessation. If RAI is used with eye disease, consider prednisone cover.");
  if(h("pain")||h("esr"))t.push("Subacute thyroiditis: aspirin (e.g., 600 mg q4–6 h) or NSAIDs; glucocorticoids (prednisone 15–40 mg) if severe.");
  if(h("pp"))t.push("Silent thyroiditis: β-blocker only; no glucocorticoids; recheck function every 2–4 weeks then annually.");
@@ -198,7 +209,1443 @@ const TX=[
 ["Subclinical and other",["Subclinical hyperthyroidism: recheck in 6–12 weeks.","Thyrotoxicosis factitia/ectopic: stop hormone; treat cause.","TSH-secreting adenoma: transsphenoidal surgery, irradiation, octreotide; ATD or RAI to control thyrotoxicosis."]]];
 
 function pathView(){return `<div class="card"><h2>Pathophysiology</h2><div class="sub">Tap a topic to expand</div></div>`+PATH.map(p=>`<details><summary>${p[0]}</summary><div><ul>${p[1].map(x=>`<li>${x}</li>`).join("")}</ul></div></details>`).join("")+`<div class="card"><h2>Thyrotoxic phase hormone sequence</h2><ol class="hormone-sequence"><li>Follicular injury</li><li>Tg and T4/T3 released</li><li>TSH suppressed, uptake low</li><li>Stores depleted: hypothyroid phase</li><li>Recovery: TSH and function normalise</li></ol></div>`}
-function txView(){return `<div class="card"><h2>Treatment</h2><div class="sub">Based on pp.2939–2945. Doses are as stated in the chapter.</div></div>`+TX.map(p=>`<details><summary>${p[0]}</summary><div><ul>${p[1].map(x=>`<li>${x}</li>`).join("")}</ul></div></details>`).join("")}
+function txView(){return `<div class="card"><h2>Treatment</h2><div class="sub">Based on pp.2939–2945. Doses are as stated in the chapter; verify current guidance.</div><button class="btn sec" onclick="go(4)">Indian brands, manufacturers / marketers &amp; costs</button></div>`+TX.map(p=>`<details><summary>${p[0]}</summary><div><ul>${p[1].map(x=>`<li>${x}</li>`).join("")}</ul></div></details>`).join("")}
+
+const INDIAN_MEDICINES=[
+  {
+    "name": "Carbimazole",
+    "category": "Antithyroid drugs",
+    "note": "Five brands; Thyrozole was sold out. Stop and obtain urgent medical review/CBC for fever, sore throat or mouth ulcers. Carbimazole and methimazole are not mg-for-mg substitutes.",
+    "rows": [
+      {
+        "brand": "Neo-Mercazole 5",
+        "composition": "Carbimazole 5 mg",
+        "company": "Abbott Healthcare — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "130 tablets",
+        "price": 305.61,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/carbimazole-5-mg",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Thyrocab 5",
+        "composition": "Carbimazole 5 mg",
+        "company": "Corona Remedies Pvt Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "100 tablets",
+        "price": 234.15,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/carbimazole-5-mg",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Anti-Thyrox 5",
+        "composition": "Carbimazole 5 mg",
+        "company": "Macleods Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "100 tablets",
+        "price": 235.07,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/carbimazole-5-mg",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Carol 5",
+        "composition": "Carbimazole 5 mg",
+        "company": "Eris Lifesciences — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "120 tablets",
+        "price": 245.7,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/carbimazole-5-mg",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Thyrozole 5",
+        "composition": "Carbimazole 5 mg",
+        "company": "Cadila Pharmaceuticals Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 19.31,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/drugs/thyrozole-5mg-tablet-397199",
+        "combination": false,
+        "availability": "Source marked sold out"
+      }
+    ]
+  },
+  {
+    "name": "Methimazole",
+    "category": "Antithyroid drugs",
+    "note": "Five brands including sold-out listings. Pregnancy requires specialist selection of antithyroid drug and close monitoring. Product strength is not a dosing recommendation.",
+    "rows": [
+      {
+        "brand": "Methimez 5",
+        "composition": "Methimazole 5 mg",
+        "company": "Sun Pharmaceutical Industries — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "30 tablets",
+        "price": 224,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/methimazole-5-mg",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Methimercazole 5",
+        "composition": "Methimazole 5 mg",
+        "company": "Abbott Healthcare — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "30 tablets",
+        "price": 208.34,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/methimazole-5-mg",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Mtmazole 5",
+        "composition": "Methimazole 5 mg",
+        "company": "Daxia Healthcare — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 46.88,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/drugs/mtmazole-5mg-tablet-963840",
+        "combination": false,
+        "availability": "Source marked sold out"
+      },
+      {
+        "brand": "Methimzole 5",
+        "composition": "Methimazole 5 mg",
+        "company": "Steris Healthcare — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "20 tablets",
+        "price": 41.25,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/drugs/methimzole-5-tablet-991185",
+        "combination": false,
+        "availability": "Source marked sold out"
+      },
+      {
+        "brand": "Metnimez 5",
+        "composition": "Methimazole 5 mg",
+        "company": "Sun Pharmaceutical Industries — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 43.13,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/drugs/metnimez-5mg-tablet-1061977",
+        "combination": false,
+        "availability": "Source marked sold out"
+      }
+    ]
+  },
+  {
+    "name": "Propylthiouracil (PTU)",
+    "category": "Antithyroid drugs",
+    "note": "Only one Indian brand with matching pack and price verified. Specialist selection, particularly early pregnancy or storm; serious hepatic and blood-cell toxicity.",
+    "rows": [
+      {
+        "brand": "PTU 50",
+        "composition": "Propylthiouracil 50 mg",
+        "company": "Macleods Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "100 tablets",
+        "price": 986.89,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/order-medicine/ptu-50mg-tablet-100s",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Propranolol",
+    "category": "Beta blockers",
+    "note": "Immediate-release examples. Symptom control does not treat the underlying hormone excess. Do not substitute LA/SR preparations into storm regimens; caution in asthma and decompensated heart failure.",
+    "rows": [
+      {
+        "brand": "Inderal 40",
+        "composition": "Propranolol 40 mg",
+        "company": "Abbott — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 3.11,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/DavaIndia-Tablet-614993",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Ciplar 40",
+        "composition": "Propranolol 40 mg",
+        "company": "Cipla Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 3.1,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/DavaIndia-Tablet-614993",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Provanol 40",
+        "composition": "Propranolol 40 mg",
+        "company": "Intas Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 3.1,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/DavaIndia-Tablet-614993",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Norten 40",
+        "composition": "Propranolol 40 mg",
+        "company": "Baroda Pharma — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 2.31,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/DavaIndia-Tablet-614993",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "DavaIndia Propranolol 40",
+        "composition": "Propranolol 40 mg",
+        "company": "Davaindia Generic Pharmacy — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 16.88,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/drugs/DavaIndia-Tablet-614993",
+        "combination": false,
+        "availability": "Source marked sold out"
+      }
+    ]
+  },
+  {
+    "name": "Atenolol",
+    "category": "Beta blockers",
+    "note": "Alternative beta blocker for selected patients; clinician selects agent and dose. It is not interchangeable with propranolol for every clinical purpose.",
+    "rows": [
+      {
+        "brand": "Hipres 50",
+        "composition": "Atenolol 50 mg",
+        "company": "Cipla — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "14 tablets",
+        "price": 32.01,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/atenolol-50-mg",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Aten 50",
+        "composition": "Atenolol 50 mg",
+        "company": "Zydus Lifesciences — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "14 tablets",
+        "price": 38.72,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/atenolol-50-mg",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Atenij 50",
+        "composition": "Atenolol 50 mg",
+        "company": "Sunij Pharma — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "14 tablets",
+        "price": 29.06,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/atenolol-50-mg",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Atenolol 50",
+        "composition": "Atenolol 50 mg",
+        "company": "Intas Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "14 tablets",
+        "price": 34.69,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/atenolol-50-mg",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Perten 50",
+        "composition": "Atenolol 50 mg",
+        "company": "Elder Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "14 tablets",
+        "price": 30.43,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/atenolol-50-mg",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      }
+    ]
+  },
+  {
+    "name": "Esmolol (IV)",
+    "category": "Hospital / storm adjuncts",
+    "note": "Hospital monitoring required; shock or decompensated cardiac disease needs expert assessment before beta blockade. Five product listings do not establish hospital stock.",
+    "rows": [
+      {
+        "brand": "Miniblock 100",
+        "composition": "Esmolol 100 mg",
+        "company": "USV Pvt Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection (10 mL)",
+        "price": 48,
+        "priceType": "Listed reference price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/esmocard-100mg-injection",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Clol 100",
+        "composition": "Esmolol 100 mg",
+        "company": "Health Biotech Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection (10 mL)",
+        "price": 224,
+        "priceType": "Listed reference price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/esmocard-100mg-injection",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Neotach 100",
+        "composition": "Esmolol 100 mg",
+        "company": "Neon Laboratories — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection (10 mL)",
+        "price": 241,
+        "priceType": "Listed reference price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/esmocard-100mg-injection",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Cardesmo 100",
+        "composition": "Esmolol 100 mg",
+        "company": "SG Pharma — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection",
+        "price": 168.75,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/neotach-100mg-injection-239575",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Esocard 100",
+        "composition": "Esmolol 100 mg",
+        "company": "Samarth Life Sciences — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection",
+        "price": 276.9,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/neotach-100mg-injection-239575",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Hydrocortisone (injectable)",
+    "category": "Hospital / storm adjuncts",
+    "note": "Hospital-only adjunct in thyroid storm. Confirm injectable salt and IV suitability with the pharmacist; do not use depot hydrocortisone acetate as an IV substitute.",
+    "rows": [
+      {
+        "brand": "Primacort 100",
+        "composition": "Hydrocortisone 100 mg; confirm salt on vial",
+        "company": "Macleods Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection",
+        "price": 47.02,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/hydrocort-100-mg-injection-144597",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Cort S 100",
+        "composition": "Hydrocortisone 100 mg; confirm salt on vial",
+        "company": "Neon Laboratories — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection",
+        "price": 47.7,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/hydrocort-100-mg-injection-144597",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Aristocort H 100",
+        "composition": "Hydrocortisone 100 mg; confirm salt on vial",
+        "company": "Aristo Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection",
+        "price": 35.25,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/hydrocort-100-mg-injection-144597",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Moncort 100",
+        "composition": "Hydrocortisone 100 mg; confirm salt on vial",
+        "company": "Montage Laboratories — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection",
+        "price": 40,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/hydrocort-100-mg-injection-144597",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "HC-Cort",
+        "composition": "Hydrocortisone 100 mg; confirm salt on vial",
+        "company": "Care Formulation Labs — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection",
+        "price": 42.5,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/hydrocort-100-mg-injection-144597",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Oral glucocorticoids",
+    "category": "Glucocorticoids",
+    "note": "Oral glucocorticoid examples for clinician-selected inflammatory thyroiditis or eye disease indications. Prednisone was named in the chapter but a current Indian retail brand/price was not verified. Prednisolone and methylprednisolone are different drugs with different potencies; these are not automatic substitutes.",
+    "rows": [
+      {
+        "brand": "Wysolone 5 DT",
+        "composition": "Prednisolone 5 mg DT",
+        "company": "Pfizer Ltd — marketer (manufacturing site: verify pack)",
+        "unit": "15 dispersible tablets",
+        "price": 10.82,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/drugs/wysolone-5mg-tablet-70901",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      },
+      {
+        "brand": "Omnacortil 5 DT",
+        "composition": "Prednisolone 5 mg DT",
+        "company": "Macleods Pharmaceuticals Pvt Ltd — marketer (manufacturing site: verify pack)",
+        "unit": "1 dispersible tablet",
+        "price": 0.69,
+        "priceType": "Listed unit price",
+        "source": "https://www.1mg.com/drugs/wysolone-5mg-tablet-70901",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      },
+      {
+        "brand": "Medrol 4",
+        "composition": "Methylprednisolone 4 mg",
+        "company": "Pfizer Ltd — marketer (manufacturing site: verify pack)",
+        "unit": "10 tablets",
+        "price": 59.3,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/drugs/medrol-4mg-tablet-13108",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      },
+      {
+        "brand": "Ivepred 4",
+        "composition": "Methylprednisolone 4 mg",
+        "company": "Sun Pharmaceutical Industries Ltd — marketer (manufacturing site: verify pack)",
+        "unit": "1 tablet (unit price)",
+        "price": 6,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/medrol-4mg-tablet-13108",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      },
+      {
+        "brand": "Macpred 4",
+        "composition": "Methylprednisolone 4 mg",
+        "company": "Macleods Pharmaceuticals Pvt Ltd — marketer (manufacturing site: verify pack)",
+        "unit": "1 tablet (unit price)",
+        "price": 5.95,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/medrol-4mg-tablet-13108",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Injectable methylprednisolone",
+    "category": "Glucocorticoids",
+    "note": "Specialist eye-disease pulse therapy requires clinical screening and monitoring. These 1 g vial presentations are cost references, not a suggested dose or schedule; confirm the prescribed dose and formulation.",
+    "rows": [
+      {
+        "brand": "Solu-Medrol 1 g",
+        "composition": "Methylprednisolone 1000 mg",
+        "company": "Pfizer Ltd — marketer (manufacturing site: verify pack)",
+        "unit": "1 injection vial",
+        "price": 2109.75,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/mypred-1000mg-injection-291345",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      },
+      {
+        "brand": "Mepresso-i 1",
+        "composition": "Methylprednisolone 1000 mg",
+        "company": "Intas Pharmaceuticals Ltd — marketer (manufacturing site: verify pack)",
+        "unit": "1 injection vial",
+        "price": 1973.67,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/mypred-1000mg-injection-291345",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      },
+      {
+        "brand": "Predemed 1000",
+        "composition": "Methylprednisolone 1000 mg",
+        "company": "Medmom Pharmaceuticals LLP — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection vial",
+        "price": 1044.38,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/mypred-1000mg-injection-291345",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Supadrol 1 g",
+        "composition": "Methylprednisolone 1000 mg",
+        "company": "NYX Pharmaceutical Pvt Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 injection vial",
+        "price": 936.56,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/mypred-1000mg-injection-291345",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Soloriv 1000",
+        "composition": "Methylprednisolone 1000 mg",
+        "company": "East African (India) Overseas — marketer (manufacturing site: verify pack)",
+        "unit": "1 injection vial",
+        "price": 935.63,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/mypred-1000mg-injection-291345",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Cholestyramine",
+    "category": "Hospital / storm adjuncts",
+    "note": "Two Indian products verified. Specialist adjunct to reduce thyroid-hormone enterohepatic recycling, not antithyroid monotherapy. Separate other oral medicines according to the product label.",
+    "rows": [
+      {
+        "brand": "Choltran",
+        "composition": "Cholestyramine 4 g",
+        "company": "Ajanta Pharma Ltd — company listed by retailer",
+        "unit": "1 sachet (5 g total granules)",
+        "price": 95,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/cholestyramine-4-gm",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Clostran",
+        "composition": "Cholestyramine 4 g",
+        "company": "Medi-Globe Corporation — company listed by retailer",
+        "unit": "1 sachet (9 g total powder)",
+        "price": 69,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/cholestyramine-4-gm",
+        "combination": false,
+        "availability": "Out of stock at source"
+      }
+    ]
+  },
+  {
+    "name": "Levothyroxine",
+    "category": "Thyroid hormone replacement",
+    "note": "For established hypothyroidism after definitive treatment or a selected supervised regimen. It does not treat untreated hyperthyroidism. Maintain formulation consistency and monitor TFTs.",
+    "rows": [
+      {
+        "brand": "Eltroxin 50",
+        "composition": "Levothyroxine / thyroxine 50 micrograms",
+        "company": "GlaxoSmithKline Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "120 tablets",
+        "price": 114.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/thyronorm-50mcg-tablet",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Thyrox 50",
+        "composition": "Levothyroxine / thyroxine 50 micrograms",
+        "company": "Macleods Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "120 tablets",
+        "price": 132.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/thyronorm-50mcg-tablet",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Thyrocip 50",
+        "composition": "Levothyroxine / thyroxine 50 micrograms",
+        "company": "Cipla Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "120 tablets",
+        "price": 138,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/thyronorm-50mcg-tablet",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Thyronil 50",
+        "composition": "Levothyroxine / thyroxine 50 micrograms",
+        "company": "East West Pharma India — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "100 tablets",
+        "price": 89.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/thyronorm-50mcg-tablet",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Rethyro 50",
+        "composition": "Levothyroxine / thyroxine 50 micrograms",
+        "company": "Tas Med India — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "120 tablets",
+        "price": 129,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/thyronorm-50mcg-tablet",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Artificial tears — CMC",
+    "category": "Eye care",
+    "note": "Lubrication for dry-eye symptoms; new visual loss, colour-vision change, severe pain or corneal exposure needs urgent ophthalmic assessment.",
+    "rows": [
+      {
+        "brand": "Lubi Fresh",
+        "composition": "Carboxymethylcellulose 0.5% w/v",
+        "company": "Apple Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 mL",
+        "price": 93,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/refresh-tears-drops-10ml",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Icyfresh 0.5%",
+        "composition": "Carboxymethylcellulose 0.5% w/v",
+        "company": "Kaizen Drugs — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 mL",
+        "price": 93.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/refresh-tears-drops-10ml",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Irivisc 0.5%",
+        "composition": "Carboxymethylcellulose 0.5% w/v",
+        "company": "Indoco Remedies — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "15 mL",
+        "price": 149.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/refresh-tears-drops-10ml",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Lacrimos 0.5%",
+        "composition": "Carboxymethylcellulose 0.5% w/v",
+        "company": "Lupin Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 mL",
+        "price": 105.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/refresh-tears-drops-10ml",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Takfresh",
+        "composition": "Carboxymethylcellulose 0.5% w/v",
+        "company": "Pharmtak Ophthalmics — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 mL",
+        "price": 117,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/refresh-tears-drops-10ml",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Ocular lubricant combinations",
+    "category": "Combination products",
+    "note": "Five combination tear products; these provide lubrication and do not treat the autoimmune process of thyroid eye disease.",
+    "rows": [
+      {
+        "brand": "Freshwell",
+        "composition": "Polyethylene glycol 0.4% + propylene glycol 0.3%",
+        "company": "Nutratec Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 mL",
+        "price": 225,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/systane-ultra-eye-drops-10ml",
+        "combination": true,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Optimoist Ultra",
+        "composition": "Polyethylene glycol 0.4% + propylene glycol 0.3%",
+        "company": "Neomedix Healthcare India — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 mL",
+        "price": 375,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/systane-ultra-eye-drops-10ml",
+        "combination": true,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Pegtears",
+        "composition": "Polyethylene glycol 0.4% + propylene glycol 0.3%",
+        "company": "Alembic Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 mL",
+        "price": 409.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/systane-ultra-eye-drops-10ml",
+        "combination": true,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Fomira",
+        "composition": "Polyethylene glycol 0.4% + propylene glycol 0.3%",
+        "company": "Zivira Labs — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 mL",
+        "price": 445,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/systane-ultra-eye-drops-10ml",
+        "combination": true,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Moistane",
+        "composition": "Polyethylene glycol 0.4% + propylene glycol 0.3%",
+        "company": "Micro Labs — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 mL",
+        "price": 530.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/systane-ultra-eye-drops-10ml",
+        "combination": true,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Paraffin ocular preparation",
+    "category": "Eye care",
+    "note": "One matching ophthalmic product verified; source marked unavailable. Only sterile eye formulations belong in the eye. Skin paraffin products are not substitutes.",
+    "rows": [
+      {
+        "brand": "Aqualube PM Eye Gel",
+        "composition": "Liquid paraffin 6% + white soft paraffin 15% + cetrimide 0.01%",
+        "company": "Ajanta Pharma — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "5 g ophthalmic gel",
+        "price": 255.94,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/drugs/aqualube-pm-eye-gel-458579",
+        "combination": true,
+        "availability": "Source marked not available"
+      }
+    ]
+  },
+  {
+    "name": "Selenium",
+    "category": "Eye care",
+    "note": "Three 100 microgram products verified. Supplement choice in mild thyroid eye disease is specialist-led; avoid duplicate selenium supplements.",
+    "rows": [
+      {
+        "brand": "TPO-100",
+        "composition": "Selenium 100 micrograms",
+        "company": "United Laboratories (manufacturer); Mattox Healthcare (marketer) — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 126,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/otc/tpo-100-tablet-otc520143",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Se-34",
+        "composition": "Selenium 100 micrograms",
+        "company": "Freyn Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 99,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/tpo-100mcg-tab-10-s",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Solgar Yeast-Free Selenium",
+        "composition": "Selenium 100 micrograms",
+        "company": "Shasva Healthcare (listed manufacturer/importer); Shasva Health (marketer) — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "100 tablets",
+        "price": 2846.57,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/otc/solgar-yeast-free-selenium-100mcg-tablet-otc698811",
+        "combination": false,
+        "availability": "Source marked unavailable"
+      }
+    ]
+  },
+  {
+    "name": "Clobetasol — dermopathy",
+    "category": "Skin care",
+    "note": "For selected thyroid dermopathy under dermatology supervision. High-potency skin steroid: not an eye medicine. Occlusion increases absorption and needs specific instruction.",
+    "rows": [
+      {
+        "brand": "Topinate",
+        "composition": "Clobetasol propionate 0.05% w/w cream",
+        "company": "Systopic Laboratories — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "30 g",
+        "price": 78.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/cobeta-0-05-w-w-cream-30g",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Powercort",
+        "composition": "Clobetasol propionate 0.05% w/w cream",
+        "company": "Glenmark Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "30 g",
+        "price": 139.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/cobeta-0-05-w-w-cream-30g",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Tenovate",
+        "composition": "Clobetasol propionate 0.05% w/w cream",
+        "company": "GlaxoSmithKline Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "30 g",
+        "price": 177,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/cobeta-0-05-w-w-cream-30g",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Exel",
+        "composition": "Clobetasol propionate 0.05% w/w cream",
+        "company": "Sun Pharmaceutical Industries — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "30 g",
+        "price": 185.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/cobeta-0-05-w-w-cream-30g",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Lobate",
+        "composition": "Clobetasol propionate 0.05% w/w cream",
+        "company": "Abbott India — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "30 g",
+        "price": 276.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/cobeta-0-05-w-w-cream-30g",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "NSAIDs — single ingredient",
+    "category": "Thyroiditis pain relief",
+    "note": "Class examples for clinician-selected thyroiditis pain relief; agents and strengths differ. Avoid duplicate NSAIDs; assess GI bleeding, renal and cardiovascular risks. Aspirin is not a fever treatment for thyroid storm.",
+    "rows": [
+      {
+        "brand": "Brufen 400",
+        "composition": "Ibuprofen 400 mg",
+        "company": "Abbott — marketer (manufacturing site: verify pack)",
+        "unit": "20 tablets",
+        "price": 25.75,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/drugs/brufen-400-tablet-70206",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      },
+      {
+        "brand": "Naprosyn 500 +",
+        "composition": "Naproxen sodium 550 mg; confirm salt/equivalent on pack",
+        "company": "RPG Life Sciences Ltd — marketer (manufacturing site: verify pack)",
+        "unit": "15 tablets",
+        "price": 162.53,
+        "priceType": "Listed MRP",
+        "source": "https://www.netmeds.com/brand/netmeds?categorynamelevel2=Nonsteroidal+Anti-Inflammatory+Drugs+%28NSAIDs%29",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      },
+      {
+        "brand": "Hifenac",
+        "composition": "Aceclofenac 100 mg",
+        "company": "Intas Pharmaceuticals Ltd — manufacturer and marketer (verify batch label)",
+        "unit": "10 tablets",
+        "price": 67,
+        "priceType": "Listed MRP",
+        "source": "https://www.1mg.com/brands/hifenac-aGlmZW5hYw%3D%3D",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      },
+      {
+        "brand": "Etoshine 60",
+        "composition": "Etoricoxib 60 mg",
+        "company": "Sun Pharmaceutical Industries Ltd — marketer (manufacturing site: verify pack)",
+        "unit": "1 tablet (unit price)",
+        "price": 14.8,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/etoxifen-60mg-tablet-1050943",
+        "combination": false,
+        "availability": "Listing verified; local stock not confirmed"
+      },
+      {
+        "brand": "Disprin Regular 325",
+        "composition": "Aspirin 325 mg effervescent",
+        "company": "Reckitt Benckiser (India) — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 7.07,
+        "priceType": "Listed MRP",
+        "source": "https://pharmeasy.in/medicines/disprin-regular-325mg-tablet-10-s-213369/",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Antihistamines — cetirizine",
+    "category": "Supportive care",
+    "note": "For mild rash only if the treating clinician advises. Fever, sore throat, mouth ulcers, severe rash or mucosal involvement during antithyroid treatment requires urgent assessment; do not mask serious toxicity.",
+    "rows": [
+      {
+        "brand": "Okacet",
+        "composition": "Cetirizine 10 mg",
+        "company": "Cipla Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 20,
+        "priceType": "Listed MRP",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/cetirizine-10-tablet-10-s",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Cetcip",
+        "composition": "Cetirizine 10 mg",
+        "company": "Cipla Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 20,
+        "priceType": "Listed MRP",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/cetirizine-10-tablet-10-s",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Piracit",
+        "composition": "Cetirizine 10 mg",
+        "company": "Abbott India — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 19.5,
+        "priceType": "Listed MRP",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/cetirizine-10-tablet-10-s",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Cetzine",
+        "composition": "Cetirizine 10 mg",
+        "company": "Dr Reddys Laboratories — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "15 tablets",
+        "price": 30,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/cetirizine-10-tablet-10-s",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Alerid",
+        "composition": "Cetirizine 10 mg",
+        "company": "Cipla Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 20,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/cetirizine-10-tablet-10-s",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Furosemide — selected edema",
+    "category": "Cardiac / edema adjuncts",
+    "note": "Only for clinician-selected fluid overload; not routine treatment for thyroid eye disease. Monitor renal function and electrolytes. Source listed all five products out of stock.",
+    "rows": [
+      {
+        "brand": "Cgfru 40",
+        "composition": "Furosemide 40 mg",
+        "company": "CMG Biotech — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 5.4,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/lasix-40mg-tablet",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Frucix",
+        "composition": "Furosemide 40 mg",
+        "company": "Medibest Pharma — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 8,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/lasix-40mg-tablet",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Frusimed 40",
+        "composition": "Furosemide 40 mg",
+        "company": "Prevego Healthcare & Research — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 8.4,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/lasix-40mg-tablet",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Lasipen 40",
+        "composition": "Furosemide 40 mg",
+        "company": "Morepen Laboratories — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 9.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/lasix-40mg-tablet",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Oroside 40",
+        "composition": "Furosemide 40 mg",
+        "company": "Zeelab Pharmacy — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 10,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/lasix-40mg-tablet",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      }
+    ]
+  },
+  {
+    "name": "Digoxin",
+    "category": "Cardiac / edema adjuncts",
+    "note": "Selected AF/heart-failure patients only. Thyroid status changes response; renal function, electrolytes and drug levels may require monitoring. This is not a routine thyroid treatment.",
+    "rows": [
+      {
+        "brand": "Lanoxin",
+        "composition": "Digoxin 0.25 mg",
+        "company": "GlaxoSmithKline Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 14,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/digon-0-25mg-tablet",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Dixin",
+        "composition": "Digoxin 0.25 mg",
+        "company": "Samarth Life Sciences — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 14,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/digon-0-25mg-tablet",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Digover",
+        "composition": "Digoxin 0.25 mg",
+        "company": "Clover Health Care Pharma — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 13.3,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/digon-0-25mg-tablet",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Digotez",
+        "composition": "Digoxin 0.25 mg",
+        "company": "Tesla Labs — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 13.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/digon-0-25mg-tablet",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Digoxin-0.25",
+        "composition": "Digoxin 0.25 mg",
+        "company": "Care Formulations Lab — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 13.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/digon-0-25mg-tablet",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Warfarin",
+    "category": "Anticoagulation in selected AF",
+    "note": "Anticoagulation requires individualized stroke/bleeding assessment. Hyperthyroidism increases warfarin sensitivity; dose by INR and monitor as thyroid status changes. Do not infer a daily dose from this 5 mg product list.",
+    "rows": [
+      {
+        "brand": "Warf 5",
+        "composition": "Warfarin 5 mg",
+        "company": "Cipla Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "30 tablets",
+        "price": 77,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/warfarin-5-tablet-10-s",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Uniwarfin 5",
+        "composition": "Warfarin 5 mg",
+        "company": "Unichem International — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 24.08,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/warf-5mg-tablet-30-s",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Warfarin-5",
+        "composition": "Warfarin 5 mg",
+        "company": "Care Formulations Lab — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 26.3,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/warf-5mg-tablet-30-s",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Warfanol-5",
+        "composition": "Warfarin 5 mg",
+        "company": "Knoll Healthcare — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 30.5,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/warf-5mg-tablet-30-s",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      },
+      {
+        "brand": "Waf-5",
+        "composition": "Warfarin 5 mg",
+        "company": "Johnlee Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "10 tablets",
+        "price": 35,
+        "priceType": "Listed pack price",
+        "source": "https://www.apollopharmacy.in/medicine-substitute/warf-5mg-tablet-30-s",
+        "combination": false,
+        "availability": "Source marked out of stock"
+      }
+    ]
+  },
+  {
+    "name": "Lithium",
+    "category": "Specialist adjuncts",
+    "note": "Selected refractory thyrotoxicosis only; narrow therapeutic index. Specialist drug-level, renal, thyroid and interaction monitoring required.",
+    "rows": [
+      {
+        "brand": "Lithosun 300",
+        "composition": "Lithium carbonate 300 mg",
+        "company": "Sun Pharmaceutical Industries — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 2.63,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/lithium-300mg-tablet-722240",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Licab",
+        "composition": "Lithium carbonate 300 mg",
+        "company": "Torrent Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 2.62,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/lithium-300mg-tablet-722240",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Lithex 300",
+        "composition": "Lithium carbonate 300 mg",
+        "company": "Shine Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 2.2,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/lithium-300mg-tablet-722240",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Intalith 300",
+        "composition": "Lithium carbonate 300 mg",
+        "company": "Intas Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 2.36,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/lithium-300mg-tablet-722240",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Litca 300",
+        "composition": "Lithium carbonate 300 mg",
+        "company": "D D Pharmaceuticals — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 2.61,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/lithium-300mg-tablet-722240",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Tamoxifen",
+    "category": "Specialist adjuncts",
+    "note": "Off-label specialist use in Riedel thyroiditis, not routine hyperthyroidism. Assess thrombosis and other contraindications.",
+    "rows": [
+      {
+        "brand": "Mamofen 20",
+        "composition": "Tamoxifen 20 mg (as citrate)",
+        "company": "Khandelwal Laboratories — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 2.49,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/tamoxifen-citrate-20mg-tablet-813615",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Tamtero 20",
+        "composition": "Tamoxifen 20 mg (as citrate)",
+        "company": "Hetero Drugs — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 2.8,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/tamoxifen-citrate-20mg-tablet-813615",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Cytotam 20",
+        "composition": "Tamoxifen 20 mg (as citrate)",
+        "company": "Cipla Ltd — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 2.25,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/tamoxifen-citrate-20mg-tablet-813615",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Tamoxilon 20",
+        "composition": "Tamoxifen 20 mg (as citrate)",
+        "company": "Celon Laboratories — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 2.83,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/tamoxifen-citrate-20mg-tablet-813615",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Entax 20",
+        "composition": "Tamoxifen 20 mg (as citrate)",
+        "company": "Neon Laboratories — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 tablet (unit price)",
+        "price": 2.82,
+        "priceType": "Listed reference price",
+        "source": "https://www.1mg.com/drugs/tamoxifen-citrate-20mg-tablet-813615",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Octreotide",
+    "category": "Specialist adjuncts",
+    "note": "Somatostatin analogue for selected TSH-secreting pituitary tumors under endocrinology care. These short-acting 100 microgram presentations are not long-acting depot formulations.",
+    "rows": [
+      {
+        "brand": "Neoctide 100",
+        "composition": "Octreotide 100 micrograms",
+        "company": "Neon Laboratories Ltd — company listed by retailer",
+        "unit": "1 injection",
+        "price": 1015,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/octreotide-100-mcg",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Octride 100",
+        "composition": "Octreotide 100 micrograms",
+        "company": "Sun Pharmaceutical Industries Ltd — company listed by retailer",
+        "unit": "1 injection",
+        "price": 550,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/octreotide-100-mcg",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Okeron 100",
+        "composition": "Octreotide 100 micrograms",
+        "company": "Wockhardt Ltd — company listed by retailer",
+        "unit": "1 mL injection",
+        "price": 250,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/octreotide-100-mcg",
+        "combination": false,
+        "availability": "Out of stock at source"
+      },
+      {
+        "brand": "Otide 100",
+        "composition": "Octreotide 100 micrograms",
+        "company": "United Biotech Pvt Ltd — company listed by retailer",
+        "unit": "1 injection",
+        "price": 560,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/octreotide-100-mcg",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      },
+      {
+        "brand": "Actide 100",
+        "composition": "Octreotide 100 micrograms",
+        "company": "Samarth Life Sciences Pvt Ltd — company listed by retailer",
+        "unit": "1 injection",
+        "price": 643.63,
+        "priceType": "Listed MRP",
+        "source": "https://www.medkart.in/composition/octreotide-100-mcg",
+        "combination": false,
+        "availability": "Listed; local stock not confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Potassium iodide (SSKI)",
+    "category": "Specialist access / quotation",
+    "note": "One US-origin import enquiry listing verified, not routine Indian retail availability. SSKI concentration differs from Lugol solution; never interchange drop counts. Specialist sequencing is required in storm.",
+    "rows": [
+      {
+        "brand": "SSKI — import reference",
+        "composition": "Potassium iodide 1 g/mL oral solution",
+        "company": "Atlantic Biologicals Corp. (listed manufacturer/TM owner); GNH India (supplier) — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "120 × 0.1 mL unit-dose syringes",
+        "price": null,
+        "priceType": "Quotation required",
+        "source": "https://www.gnhindia.com/products/sski-1-g-ml-solution-2",
+        "combination": false,
+        "availability": "Import enquiry only; price and access require confirmation"
+      }
+    ]
+  },
+  {
+    "name": "Teprotumumab",
+    "category": "Specialist access / quotation",
+    "note": "One named-patient supply reference verified. This is not a five-brand domestic market and no Indian treatment-course cost is established.",
+    "rows": [
+      {
+        "brand": "Tepezza — named-patient reference",
+        "composition": "Teprotumumab-trbw 500 mg lyophilized powder",
+        "company": "Horizon (as listed); South Delhi Pharma (supplier) — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "1 single-dose vial",
+        "price": null,
+        "priceType": "Quotation required",
+        "source": "https://southdelhipharma.com/product/tepezza-teprotumumab-trbw-for-injection-for-intravenous-use/",
+        "combination": false,
+        "availability": "Named-patient supply enquiry; current manufacturer, permissions and stock must be confirmed"
+      }
+    ]
+  },
+  {
+    "name": "Radioiodine I-131",
+    "category": "Specialist access / quotation",
+    "note": "Two BRIT formulations documented; not pharmacy-brand alternatives. Activity is prescribed by nuclear medicine, and product cost differs from the total hospital treatment cost. Current supply and charges require confirmation.",
+    "rows": [
+      {
+        "brand": "BRIT IOM-1",
+        "composition": "Sodium iodide I-131 oral solution",
+        "company": "Board of Radiation and Isotope Technology (BRIT) — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "Activity-specific supply",
+        "price": null,
+        "priceType": "No current price verified",
+        "source": "https://cdnbbsr.s3waas.gov.in/s35b8e4fd39d9786228649a8a8bec4e008/uploads/2023/10/20231019477169214.pdf",
+        "combination": false,
+        "availability": "Institutional nuclear-medicine supply; current quote required"
+      },
+      {
+        "brand": "BRIT IOM-5",
+        "composition": "Sodium iodide I-131 capsules",
+        "company": "Board of Radiation and Isotope Technology (BRIT) — marketer / supplier as listed; verify manufacturing site on pack",
+        "unit": "Activity-specific supply",
+        "price": null,
+        "priceType": "No current price verified",
+        "source": "https://cdnbbsr.s3waas.gov.in/s35b8e4fd39d9786228649a8a8bec4e008/uploads/2023/10/20231019477169214.pdf",
+        "combination": false,
+        "availability": "Institutional nuclear-medicine supply; current quote required"
+      }
+    ]
+  }
+];
+const INDIAN_MEDICINE_REVIEW='31 October 2026';
+function medEsc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function medView(){return `<div class="card"><h2>Indian medicines: brands & costs</h2><p>Five product examples per medicine class where verified. These are Indian-market listings, not a sales ranking. Import references and classes with fewer verified products are marked.</p><p class="sub">Checked ${INDIAN_MEDICINE_REVIEW}. Static INR references; MRP, listed pack prices and unit prices are labelled separately. Verify the current pack, batch price, strength, formulation and stock. Company roles follow the source; where only a marketer/supplier is known, the actual manufacturing site has not been inferred. Strength is not a prescription.</p><p class="sub">Scroll each table horizontally to see company, pack, cost and source details.</p><label for="med-search">Search generic, brand, company, strength or class</label><input id="med-search" type="search" placeholder="e.g. carbimazole, Abbott, selenium…" oninput="renderMedicines()"><div class="grid med-filters"><div><label for="med-class">Medicine class</label><select id="med-class" onchange="renderMedicines()"><option value="">All classes</option>${[...new Set(INDIAN_MEDICINES.map(g=>g.category))].map(c=>`<option>${medEsc(c)}</option>`).join('')}</select></div><div><label for="med-type">Product type</label><select id="med-type" onchange="renderMedicines()"><option value="">All products</option><option value="combo">Combination products</option><option value="single">Single ingredient</option><option value="quote">Price quotation required</option></select></div></div><button class="btn sec" onclick="resetMedicines()">Clear filters</button><p id="med-count" role="status" aria-live="polite" class="sub"></p></div>
+<details><summary>Combination therapy & clinical context</summary><div><p><b>Antithyroid drug + beta blocker:</b> separately prescribed products; the beta blocker controls symptoms. No verified Indian fixed-dose antithyroid/beta-blocker catalogue is claimed.</p><p><b>Block and replace:</b> antithyroid drug plus levothyroxine is a specialist regimen of separate medicines. Dose titration is generally preferred because block-and-replace can increase adverse effects. It is not routine pregnancy therapy; rare fetal indications need specialist care.</p><p><b>Thyroid storm:</b> thionamide, appropriately sequenced iodide, glucocorticoid and selected beta blockade form an emergency hospital regimen, not a combination tablet. Listed ocular lubricant combinations support eye comfort; they do not treat thyroid hormone excess.</p><p>Carbimazole, methimazole and PTU must not be taken together or switched without a prescription. Fever, sore throat or mouth ulcers while taking a thionamide: stop the medicine and seek urgent assessment/CBC. Antihistamines do not replace that assessment.</p><p class="sub"><a href="https://doi.org/10.1089/thy.2016.0229" target="_blank" rel="noopener noreferrer">ATA hyperthyroidism guideline</a> · <a href="https://www.thyroid.org/patient-thyroid-information/ct-for-patients/may-2017/vol-10-issue-5-p-3-7/" target="_blank" rel="noopener noreferrer">ATA pregnancy guidance</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/24991217/" target="_blank" rel="noopener noreferrer">Thyroid status and warfarin response</a></p></div></details>
+<details><summary>Coverage gaps: prednisone, perchlorate & unspecified classes</summary><div><p><b>Prednisone:</b> a current Indian retail brand, pack-specific price and manufacturer were not verified. Prednisolone and methylprednisolone entries are labelled as different drugs; they are not automatic substitutes for a prednisone prescription.</p><p><b>Potassium perchlorate:</b> no current Indian medicinal product, manufacturer and pack-specific INR price verified. Laboratory reagent prices are excluded. Specialist procurement and toxicity monitoring are essential.</p><p><b>Antibiotics:</b> the chapter mentions culture-directed antibiotics for infection without naming an agent. No arbitrary five-brand antibiotic recommendation is implied. Likewise, amiodarone, interferon, TKIs and checkpoint inhibitors are potential causes discussed in the assessment, not treatment suggestions.</p><p>Limited verified products: PTU (1), cholestyramine (2), paraffin eye preparation (1), selenium (3), SSKI import reference (1), teprotumumab named-patient reference (1), and radioiodine formulations (2). Fewer listings are shown rather than inventing five brands or treating different strengths as distinct brands.</p></div></details><div id="med-results"></div>`;}
+function resetMedicines(){['med-search','med-class','med-type'].forEach(id=>document.getElementById(id).value='');renderMedicines();}
+function renderMedicines(){
+ const terms=document.getElementById('med-search').value.trim().toLowerCase().split(/\s+/).filter(Boolean),category=document.getElementById('med-class').value,type=document.getElementById('med-type').value;
+ let count=0,groupCount=0;
+ const html=INDIAN_MEDICINES.map(g=>{
+  if(category&&g.category!==category)return '';
+  const rows=g.rows.filter(r=>{
+   if(type==='combo'&&!r.combination||type==='single'&&r.combination||type==='quote'&&r.price!==null)return false;
+   const haystack=[g.name,g.category,r.brand,r.composition,r.company,r.availability,r.combination?'combination FDC':'single ingredient'].join(' ').toLowerCase();
+   return terms.every(t=>haystack.includes(t));
+  });
+  if(!rows.length)return '';count+=rows.length;groupCount++;
+  return `<details class="medicine-group"${terms.length||category||type?' open':''}><summary>${medEsc(g.name)} <span class="med-tag">${rows.length} product${rows.length===1?'':'s'}</span></summary><div><p class="sub">${medEsc(g.category)}</p><p>${medEsc(g.note)}</p><div class="scroll med-table" tabindex="0" role="region" aria-label="${medEsc(g.name)} medicine table"><table class="tbl"><thead><tr><th scope="col">Brand</th><th scope="col">Composition / strength</th><th scope="col">Manufacturer / marketer</th><th scope="col">Pack or price unit</th><th scope="col">Reference cost (INR)</th><th scope="col">Availability / source</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${medEsc(r.brand)}</b>${r.combination?'<br><span class="med-tag">Combination</span>':''}</td><td>${medEsc(r.composition)}</td><td>${medEsc(r.company)}</td><td>${medEsc(r.unit)}</td><td>${r.price===null?'Not verified — request quote':'₹'+r.price.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}<br><span class="sub">${medEsc(r.priceType)}</span></td><td>${medEsc(r.availability)}<br><a href="${medEsc(r.source)}" target="_blank" rel="noopener noreferrer" aria-label="${medEsc(r.brand)} product and price source">Product / price source</a></td></tr>`).join('')}</tbody></table></div></div></details>`;
+ }).join('');
+ document.getElementById('med-results').innerHTML=html||'<div class="card">No medicines match these filters.</div>';
+ document.getElementById('med-count').textContent=count+' product entries across '+groupCount+' medicine groups • checked '+INDIAN_MEDICINE_REVIEW;
+}
+
 
 function quiz(){
 const q=document.getElementById("quiz");if(!q)return;
@@ -207,8 +1654,9 @@ function ans(b,j,c){const p=b.parentNode;if(p.dataset.d)return;p.dataset.d=1;b.c
 
 function render(){
 const m=document.getElementById("main");
-m.innerHTML=[assessView,pathView,()=>LEARN,txView][tab]();
+m.innerHTML=[assessView,pathView,()=>LEARN,txView,medView][tab]();
 if(tab==2)quiz();
+if(tab==4)renderMedicines();
 }
 nav();render();
 </script>
@@ -216,3 +1664,4 @@ nav();render();
 
 </body>
 </html>
+
